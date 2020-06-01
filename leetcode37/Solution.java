@@ -65,7 +65,12 @@ class Solution {
 
     boolean findFlag = false;
 
+    char[][] board;
+
     public void solveSudoku(char[][] board) {
+        this.board = board;
+
+        // 预处理
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
                 if (board[i][j] != '.') {
@@ -74,10 +79,16 @@ class Solution {
                 }
             }
         }
+        backTrace(0, 0);
     }
 
-    private void backTrace(char[][] board, int row, int col) {
-        while (row < 9 && col < 9 && board[row][col] == '.') {
+    private void backTrace(int row, int col) {
+        if (col == 9) {
+            col = 0;
+            row++;
+        }
+
+        while (row < 9 && board[row][col] != '.') {
             col++;
             if (col == 9) {
                 col = 0;
@@ -85,8 +96,19 @@ class Solution {
             }
         }
 
+        if (row == 9) {
+            findFlag = true;
+            return;
+        }
+
         for (int i = 1; i < 10; i++) {
-            
+            if (canPlace(row, col, i)) {
+                placeNumber(row, col, i);
+                backTrace(row, col + 1);
+                if (!findFlag) {
+                    removeNumber(row, col, i);
+                }
+            }
         }
     }
 
@@ -95,6 +117,20 @@ class Solution {
         boxs[boxIndex][number]++;
         rows[row][number]++;
         cols[col][number]++;
+        board[row][col] = (char) ('0' + number);
+    }
+
+    private void removeNumber(int row, int col, int number) {
+        int box = row / 3 * 3 + col / 3;
+        boxs[box][number]--;
+        rows[row][number]--;
+        cols[col][number]--;
+        board[row][col] = '.';
+    }
+
+    private boolean canPlace(int row, int col, int number) {
+        int box = row / 3 * 3 + col / 3;
+        return boxs[box][number] + rows[row][number] + cols[col][number] == 0;
     }
 }
 // @lc code=end
