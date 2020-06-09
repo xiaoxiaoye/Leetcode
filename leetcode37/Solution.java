@@ -1,7 +1,5 @@
 package leetcode.leetcode37;
 
-import java.util.HashMap;
-
 /*
  * @lc app=leetcode.cn id=37 lang=java
  *
