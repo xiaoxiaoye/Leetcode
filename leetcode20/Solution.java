@@ -1,56 +1,33 @@
 package leetcode.leetcode20;
 
-class StackC{
-    private char[] data;
-    private int n;
-    private int count;
-
-    public StackC(int n){
-        this.n = n;
-        this.data = new char[n];
-        this.count = 0;
-    }
-
-    public boolean add(char item){
-        if(count==n) return false;
-        data[count] = item;
-        count++;
-        return true;
-    }
-
-    public char pop(){
-        char res = '\0';
-        if(count <= 0) return res;
-        res = data[count-1];
-        count--;
-        return res;
-    }
-
-    public int length(){
-        return count;
-    }
-}
+import java.util.*;
 
 class Solution {
+    private final static Map<Character, Character> cacheMap = new HashMap<>();
+    static {
+        cacheMap.put('{', '}');
+        cacheMap.put('[', ']');
+        cacheMap.put('(', ')');
+    }
+
     public boolean isValid(String s) {
-        if(s.length() == 0) return true;
-        StackC stack = new StackC(s.length());
-        char[] cs = s.toCharArray();
-        for(char c : cs){
-            if(c == '{' || c == '[' || c == '('){
-                stack.add(c);
-            } else if(c == '}' || c == ']' || c == ')'){
-                char ec = stack.pop();
-                if(c == '}' && ec != '{'){
+        Stack<Character> stack = new Stack<Character>();
+        for (Character c : s.toCharArray()) {
+            if (cacheMap.containsKey(c)) {
+                stack.push(c);
+            } else {
+                // 这里需要判断栈是否已经为空， 为空，然后下个字符是右括号，说明括号不匹配
+                if (stack.isEmpty()) {
                     return false;
-                } else if(c == ']' && ec != '['){
-                    return false;
-                } else if(c == ')' && ec != '('){
+                }
+                Character l = stack.pop();
+                if (!cacheMap.get(l).equals(c)) {
                     return false;
                 }
             }
         }
-        return stack.length()==0;
+
+        return stack.isEmpty();
     }
 
     public static void main(String[] args) {
