@@ -1,5 +1,7 @@
 package leetcode.leetcode206;
 
+import leetcode.common.*;
+
 /*
  * @lc app=leetcode.cn id=206 lang=java
  *
@@ -36,28 +38,19 @@ package leetcode.leetcode206;
  *     ListNode(int x) { val = x; }
  * }
  */
-class ListNode {
-    int val;
-    ListNode next;
-    ListNode(int x) {
-        val = x;
-        next = null;
-    }
-}
 
 public class Solution {
     public ListNode reverseList(ListNode head) {
-        ListNode prev = null;
+        ListNode dummy = new ListNode(-1);
 
         while(head != null) {
             ListNode next = head.next;
+            head.next = dummy.next;
+            dummy.next = head;
 
-            head.next = prev;
-
-            prev = head;
             head = next;
         }
-        return prev;
+        return dummy.next;
     }
 }
 // @lc code=end

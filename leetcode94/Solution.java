@@ -1,6 +1,8 @@
 package leetcode.leetcode94;
+import leetcode.common.*;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 /*
  * @lc app=leetcode.cn id=94 lang=java
  *
@@ -43,42 +45,68 @@ import java.util.*;
  *     TreeNode(int x) { val = x; }
  * }
  */
-
-class TreeNode {
-    int val;
-    TreeNode left;
-    TreeNode right;
-    TreeNode(int x) {val = x;}
-}
-public class Solution {
+class Solution {
     public List<Integer> inorderTraversal(TreeNode root) {
-        List<Integer> result = new LinkedList<>();
-        recursionTraversal(root, result);
-        return result;
+        List<Integer> results = new LinkedList<>();
+        // helper(root, results);
+        // traversalByStack(root, results);
+        traversalByMirror(root, results);
+        return results;
     }
 
-    // 递归遍历
-    private void recursionTraversal(TreeNode node, List<Integer> result){
+    // 递归遍历二叉树
+    private void helper(TreeNode node, List<Integer> results){
         if(node == null) return;
-        recursionTraversal(node.left, result);
-        result.add(node.val);
-        recursionTraversal(node.right, result);
+        helper(node.left, results);
+        results.add(node.val);
+        helper(node.right, results);
     }
 
-    // 基于迭代的遍历
-    private void stackTraversal(TreeNode node, List<Integer> result){
-        Stack<TreeNode> stack = new Stack<>();
-        TreeNode curr = node;
-        while(curr != null && stack.size() != 0){
-            while(curr != null){
-                stack.add(curr);
-                curr = curr.left;
+    // 利用堆栈迭代遍历二叉树
+    private void traversalByStack(TreeNode node, List<Integer> results){
+        if(node == null) return;
+        LinkedList<TreeNode> stack = new LinkedList<>();
+        while(node != null || !stack.isEmpty()){
+            while(node != null){
+                stack.addFirst(node);
+                node = node.left;
             }
-            curr = stack.pop();
-            result.add(curr.val);
-            curr = curr.right;
+
+            node = stack.pop();
+            results.add(node.val);
+            node = node.right;
+        }
+    }
+
+    // mirror遍历，空间复杂度优化到O(1)
+    private void traversalByMirror(TreeNode node, List<Integer> results){
+        // 当前节点
+        TreeNode cur = node;
+        // 前驱节点
+        TreeNode prev;
+
+        while(cur != null){
+            if(cur.left == null){
+                results.add(cur.val);
+                cur = cur.right;
+            } else {
+                // 找到前驱节点
+                prev = cur.left;
+                while(prev.right != null && prev.right != cur){
+                    prev = prev.right;
+                }
+
+                // 将前驱节点的右节点指向当前节点
+                if(prev.right == null){
+                    prev.right = cur;
+                    cur = cur.left;
+                } else { // 到这里意味着prev.right==cur
+                    prev.right = null;
+                    results.add(cur.val);
+                    cur = cur.right;
+                }
+            }
         }
     }
 }
 // @lc code=end
-

@@ -1,5 +1,7 @@
 package leetcode.leetcode108;
 
+import leetcode.common.*;
+
 /*
  * @lc app=leetcode.cn id=108 lang=java
  *
@@ -44,34 +46,20 @@ package leetcode.leetcode108;
  *     TreeNode(int x) { val = x; }
  * }
  */
-class TreeNode {
-    int val;
-    TreeNode left;
-    TreeNode right;
-    TreeNode(int x) { val = x; }
-}
+
 public class Solution {
-    private int[] nums;
-
     public TreeNode sortedArrayToBST(int[] nums) {
-        this.nums = nums;
-        return buildTree(0, nums.length);
+        if(nums.length == 0) return null;
+        return buildTreeHelper(nums, 0, nums.length-1);        
     }
 
-    private TreeNode buildTree(int begin, int end){
-        if(begin >= end) return null;
-        int root_index = (begin + end) / 2;
-        TreeNode root = new TreeNode(nums[root_index]);
-        root.left = buildTree(begin, root_index);
-        root.right = buildTree(root_index+1, end);
+    private TreeNode buildTreeHelper(int[] nums, int begin, int end){
+        if(begin>end) return null;
+        int rootIndex = (begin+end+1)/2;
+        TreeNode root = new TreeNode(nums[rootIndex]);
+        root.left = buildTreeHelper(nums, begin, rootIndex-1);
+        root.right = buildTreeHelper(nums, rootIndex+1, end);
         return root;
-    }
-
-    public static void main(String[] args) {
-        Solution s = new Solution();
-        int[] nums = {-10, -3, 0, 5, 9};
-        TreeNode n = s.sortedArrayToBST(nums);
-        System.out.println(n.val);
     }
 }
 // @lc code=end

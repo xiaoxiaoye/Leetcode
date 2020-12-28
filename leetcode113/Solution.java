@@ -1,6 +1,7 @@
 package leetcode.leetcode113;
 
 import java.util.*;
+import leetcode.common.*;
 
 /*
  * @lc app=leetcode.cn id=113 lang=java
@@ -45,81 +46,83 @@ import java.util.*;
 
 // @lc code=start
 /**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode(int x) { val = x; }
- * }
+ * Definition for a binary tree node. public class TreeNode { int val; TreeNode
+ * left; TreeNode right; TreeNode(int x) { val = x; } }
  */
-class TreeNode {
-    int val;
-    TreeNode left;
-    TreeNode right;
-    TreeNode(int x) { val = x; }
-}
-
 
 class Solution {
-    Map<TreeNode, TreeNode> route = new LinkedHashMap<>();
     public List<List<Integer>> pathSum(TreeNode root, int sum) {
+        if (root == null)
+            return Collections.emptyList();
+        List<Integer> treeRoute = new LinkedList<>();
         List<List<Integer>> results = new LinkedList<>();
-        if(root != null){
-            helper(root, sum, 0, results);
-        }
+        // helper(root, treeRoute,results, 0, sum);
+        helperBFS(root, results, sum);
         return results;
     }
 
-    private void helper(TreeNode node, int sum, int current, List<List<Integer>> results){
-        current += node.val;
-
-        // if(current > sum) return;
-
-        if(node.left == null && node.right == null){
-            if(sum == current){
-                LinkedList<Integer> list = new LinkedList<>();
-                while(node != null){
-                    list.addFirst(node.val);
-                    node = route.get(node);
-                }
-                results.add(list);
-            }
+    // 深度优先遍历
+    private void helper(TreeNode node, List<Integer> treeRoute, List<List<Integer>> results, int curSum, int sum) {
+        if (node == null)
             return;
-        }
+        
+        treeRoute.add(node.val);
 
-        if(node.left != null){
-            route.put(node.left, node);
-            helper(node.left, sum, current, results);
-        }
-
-        if(node.right != null){
-            route.put(node.right, node);
-            helper(node.right, sum, current, results);
-        }
-    }
-}
-
-// 参考方法： https://leetcode-cn.com/problems/path-sum-ii/solution/zai-suo-you-java-ti-jiao-zhong-ji-bai-liao-10000-2/
-class Solution_ {
-    List<List<Integer>> list = new ArrayList<>();
-    ArrayList<Integer> inner = new ArrayList<>();
-    public List<List<Integer>> pathSum(TreeNode root, int sum) {
-        if (root == null) return list;
-        sum -= root.val;
-        inner.add(root.val);  // 入列表
-        if (root.left == null && root.right == null){
-            if (sum == 0){
-                list.add(new ArrayList<>(inner));  // 记得拷贝一份
+        if (node.left == null && node.right == null) {
+            if (curSum + node.val == sum) {
+                List<Integer> items = new LinkedList<>(treeRoute);
+                results.add(items);
             }
-
         }
-        if (root.left != null)  pathSum(root.left, sum);
-        if (root.right != null)  pathSum(root.right, sum);
-        inner.remove(inner.size()-1);  //从列表中删除
-        return list;
+        if (node.left != null) {
+            helper(node.left, treeRoute, results,curSum + node.val, sum);
+        }
+
+        if (node.right != null) {
+            helper(node.right, treeRoute, results,curSum + node.val, sum);
+        }
+        treeRoute.remove(treeRoute.size() - 1);
+    }
+
+    // 广度优先遍历
+    private void helperBFS(TreeNode node, List<List<Integer>> results, int sum) {
+        // 利用map存储遍历轨迹
+        HashMap<TreeNode,TreeNode> routeMap = new HashMap<>();
+
+        Deque<TreeNode> nodeDeque = new LinkedList<>();
+        Deque<Integer> valueDeque = new LinkedList<>();
+        nodeDeque.addFirst(node);
+        valueDeque.addFirst(node.val);
+
+        while(!nodeDeque.isEmpty()){
+            node = nodeDeque.removeLast();
+            int curSum = valueDeque.removeLast();
+            if(node.left == null && node.right==null){
+                if(curSum == sum){
+                    results.add(getPath(routeMap, node));
+                }
+            }
+            if(node.left != null){
+                nodeDeque.addFirst(node.left);
+                valueDeque.addFirst(curSum+node.left.val);
+                routeMap.put(node.left, node);
+            }
+            if(node.right != null){
+                nodeDeque.addFirst(node.right);
+                valueDeque.addFirst(curSum+node.right.val);
+                routeMap.put(node.right, node);
+            }
+        }
+    }
+
+    private List<Integer> getPath(HashMap<TreeNode,TreeNode> routeMap, TreeNode node){
+        LinkedList<Integer> items = new LinkedList<>();
+        items.add(node.val);
+        while(routeMap.containsKey(node)){
+            node = routeMap.get(node);
+            items.addFirst(node.val);
+        }
+        return items;
     }
 }
-
 // @lc code=end
-

@@ -1,6 +1,7 @@
 package leetcode.leetcode107;
 
 import java.util.*;
+import leetcode.common.*;
 
 /*
  * @lc app=leetcode.cn id=107 lang=java
@@ -50,36 +51,32 @@ import java.util.*;
  *     TreeNode(int x) { val = x; }
  * }
  */
-class TreeNode {
-    int val;
-    TreeNode left;
-    TreeNode right;
-    TreeNode(int x) { val = x; }
-}
+
 public class Solution {
     public List<List<Integer>> levelOrderBottom(TreeNode root) {
-        LinkedList<List<Integer>> result = new LinkedList<>();
-        if(root == null) return result;
+        if(root == null) return Collections.emptyList();
+        LinkedList<List<Integer>> results=new LinkedList<>();
+        Deque<TreeNode> deque = new LinkedList<>();
+        deque.add(root);
+        while(!deque.isEmpty()){
+            int size = deque.size();
 
-        Queue<TreeNode> queue = new LinkedList<>();
-        queue.add(root);
-
-        while(!queue.isEmpty()){
             List<Integer> items = new LinkedList<>();
-
-            int len = queue.size();
-            for (int i = 0; i < len; i++) {
-                TreeNode node = queue.poll();
+            for (int i = 0; i < size; i++) {
+                TreeNode node = deque.removeLast();
                 items.add(node.val);
 
-                if(node.left != null)
-                    queue.add(node.left);
-                if(node.right != null)
-                    queue.add(node.right);
+                if(node.left!=null){
+                    deque.addFirst(node.left);
+                }
+
+                if(node.right!=null){
+                    deque.addFirst(node.right);
+                }
             }
-            result.addFirst(items);
+            results.addFirst(items);
         }
-        return result;
+        return results;
     }
 }
 // @lc code=end

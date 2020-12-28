@@ -1,6 +1,7 @@
 package leetcode.leetcode102;
 
 import java.util.*;
+import leetcode.common.*;
 
 /*
  * @lc app=leetcode.cn id=102 lang=java
@@ -42,47 +43,35 @@ import java.util.*;
 
 // @lc code=start
 /**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode(int x) { val = x; }
- * }
+ * Definition for a binary tree node. public class TreeNode { int val; TreeNode
+ * left; TreeNode right; TreeNode(int x) { val = x; } }
  */
-class TreeNode {
-     int val;
-     TreeNode left;
-     TreeNode right;
-     TreeNode(int x) { val = x; }
- }
 
 public class Solution {
     public List<List<Integer>> levelOrder(TreeNode root) {
-        List<List<Integer>> result = new LinkedList<>();
+        if (root == null)
+            return Collections.emptyList();
 
-        LinkedList<TreeNode> queue = new LinkedList<>();
-        if(root == null) return result;
-        queue.add(root);
+        List<List<Integer>> results = new LinkedList<>();
 
-        int level = 0;
-        while(!queue.isEmpty()){
-            result.add(new LinkedList<>());
-
-            int len = queue.size();
-            for (int i = 0; i < len; i++) {
-                TreeNode node = queue.poll();
-                result.get(level).add(node.val);
-
-                if(node.left != null)
-                    queue.add(node.left);
-                if(node.right != null)
-                    queue.add(node.right);
+        Deque<TreeNode> deque = new ArrayDeque<>();
+        deque.add(root);
+        while (!deque.isEmpty()) {
+            List<Integer> levelResult = new LinkedList<>();
+            int size = deque.size();
+            for (int i = 0; i < size; i++) {
+                TreeNode node = deque.removeLast();
+                levelResult.add(node.val);
+                if (node.left != null) {
+                    deque.addFirst(node.left);
+                }
+                if (node.right != null) {
+                    deque.addFirst(node.right);
+                }
             }
-            level++;
+            results.add(levelResult);
         }
-        return result;
+        return results;
     }
 }
 // @lc code=end
-

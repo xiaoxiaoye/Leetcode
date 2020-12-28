@@ -1,6 +1,7 @@
 package leetcode.leetcode106;
 
 import java.util.*;
+import leetcode.common.*;
 
 /*
  * @lc app=leetcode.cn id=106 lang=java
@@ -40,57 +41,40 @@ import java.util.*;
 
 // @lc code=start
 /**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode(int x) { val = x; }
- * }
+ * Definition for a binary tree node. public class TreeNode { int val; TreeNode
+ * left; TreeNode right; TreeNode(int x) { val = x; } }
  */
-class TreeNode {
-    int val;
-    TreeNode left;
-    TreeNode right;
-    TreeNode(int x) { val = x; }
-}
-public class Solution {
-    private int post_index;
-    private int[] postorder;
-    private HashMap<Integer, Integer> inorderIndexMap;
-    public TreeNode buildTree(int[] inorder, int[] postorder) {
-        this.postorder = postorder;
-        this.post_index = postorder.length-1;
-        this.inorderIndexMap = new HashMap<>();
 
-        for (int i = 0; i < postorder.length; i++) {
-            inorderIndexMap.put(inorder[i], i);
+public class Solution {
+    HashMap<Integer, Integer> pivotMap = new HashMap<>();
+
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        if (inorder.length == 0 || postorder.length == 0) {
+            return null;
         }
 
-        return helper(0, postorder.length);
+        for (int i = 0; i < inorder.length; i++) {
+            pivotMap.put(inorder[i], i);
+        }
+
+        int n = inorder.length;
+        return buildTreeHelper(inorder, 0, n - 1, postorder, 0, n - 1);
     }
 
-    private TreeNode helper(int left, int right){
-        if(left==right) return null;
-
-        int root_val = postorder[post_index--];
-        int root_index = inorderIndexMap.get(root_val);
-
-        TreeNode root = new TreeNode(root_val);
-
-        root.right = helper(root_index+1, right);
-        root.left = helper(left, root_index);
+    private TreeNode buildTreeHelper(int[] inorder, int inStart, int inEnd, int[] postorder, int postStart,
+            int postEnd) {
+        if (inStart > inEnd)
+            return null;
+        int pivot = pivotMap.get(postorder[postEnd]);
+        // 左子树的长度
+        int leftLength = pivot - inStart;
+        // 后续遍历的最后一个节点是父节点
+        TreeNode root = new TreeNode(postorder[postEnd]);
+        // 递归构建左子树
+        root.left = buildTreeHelper(inorder, inStart, pivot - 1, postorder, postStart, postStart + leftLength - 1);
+        // 递归构建右子树
+        root.right = buildTreeHelper(inorder, pivot + 1, inEnd, postorder, postStart + leftLength, postEnd - 1);
         return root;
-    }
-
-    public static void main(String[] args) {
-        Solution s = new Solution();
-
-        int[] inorder = {9,3,15,20,7};
-        int[] postorder = {9,15,7,20,3};
-
-        TreeNode tree = s.buildTree(inorder, postorder);
-        System.out.println(tree.val);
     }
 }
 // @lc code=end

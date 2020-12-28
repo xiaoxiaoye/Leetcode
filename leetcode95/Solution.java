@@ -1,5 +1,10 @@
 package leetcode.leetcode95;
 
+import leetcode.common.*;
+
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 /*
  * @lc app=leetcode.cn id=95 lang=java
  *
@@ -40,6 +45,7 @@ package leetcode.leetcode95;
  * 
  */
 
+// @lc code=start
 /**
  * Definition for a binary tree node.
  * public class TreeNode {
@@ -49,48 +55,33 @@ package leetcode.leetcode95;
  *     TreeNode(int x) { val = x; }
  * }
  */
-import java.util.*;
-
-class TreeNode {
-    int val;
-    TreeNode left;
-    TreeNode right;
-    TreeNode(int x) { val = x; }
-}
-
-// @lc code=start
 class Solution {
-    private List<TreeNode> helper(int start, int end) {
-        LinkedList<TreeNode> allTrees = new LinkedList<>();
-        if(start > end){
-            allTrees.add(null);
-            return allTrees;
+    public List<TreeNode> generateTrees(int n) {
+        if(n==0) return Collections.emptyList();
+        return helper(1, n);
+    }
+
+    private List<TreeNode> helper(int start, int end){
+        List<TreeNode> results = new LinkedList<>();
+        if(start>end) {
+            // 为下方遍历正常运行，需要放入null
+            results.add(null);
+            return results;
         }
 
         for (int i = start; i <= end; i++) {
-            List<TreeNode> leftTrees = helper(start, i-1);
-            List<TreeNode> rightTrees = helper(i+1, end);
-
-            for (TreeNode rNode : rightTrees) {
-                for (TreeNode lNode : leftTrees) {
-                    TreeNode currentNode = new TreeNode(i);
-                    currentNode.left = lNode;
-                    currentNode.right = rNode;
-
-                    allTrees.add(currentNode);
+            List<TreeNode> lefts = helper(start, i-1);
+            List<TreeNode> rights = helper(i+1, end);
+            for (TreeNode left : lefts) {
+                for (TreeNode right : rights) {
+                    TreeNode node = new TreeNode(i);
+                    node.left = left;
+                    node.right = right;
+                    results.add(node);
                 }
             }
         }
-
-        return allTrees;
-    }
-
-    public List<TreeNode> generateTrees(int n) {
-        if(n == 0){
-            return Collections.emptyList();
-        }
-        
-        return helper(1, n);
+        return results;
     }
 }
 // @lc code=end

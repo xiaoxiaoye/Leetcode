@@ -1,5 +1,7 @@
 package leetcode.leetcode116;
 
+import leetcode.common.*;
+
 /*
  * @lc app=leetcode.cn id=116 lang=java
  *
@@ -78,57 +80,42 @@ class Node {
 };
 */
 
-class Node {
-    public int val;
-    public Node left;
-    public Node right;
-    public Node next;
-
-    public Node() {}
-    
-    public Node(int _val) {
-        val = _val;
-    }
-
-    public Node(int _val, Node _left, Node _right, Node _next) {
-        val = _val;
-        left = _left;
-        right = _right;
-        next = _next;
-    }
-};
 
 // @lc code=start
 public class Solution {
-    public Node connect(Node root) {
-        if(root == null) return root;
+    // 递归
+    public Node connect_r(Node root) {
+        if(root == null) return null;
 
-        Node pre = root;
-        Node cur = null;
-        while(pre.left != null){
-            cur = pre;
-            while(cur != null){
-                cur.left.next = cur.right;
-                if(cur.next != null){
-                    cur.right.next = cur.next.left;
-                }
-                cur = cur.next;
-            }
-            pre = pre.left;
+        if(root.left != null){
+            root.left.next = root.right;
         }
 
+        if(root.next != null && root.right != null){
+            root.right.next = root.next.left;
+        }
+        connect(root.left);
+        connect(root.right);
         return root;
     }
 
-    public Node connect_r(Node root) {
-        if(root == null || root.left == null) return root;
+    public Node connect(Node root){
+        if(root == null) return root;
 
-        root.left.next = root.right;
-        if(root.next != null){
-            root.right.next = root.next.left;
+        Node cur = root;
+        while(cur.left != null){
+            Node head = cur;
+            while(head != null){
+                if(head.left != null){
+                    head.left.next = head.right;
+                }
+                if(head.next != null){
+                    head.right.next = head.next.left;
+                }
+                head = head.next;
+            }
+            cur = cur.left;
         }
-        connect_r(root.left);
-        connect_r(root.right);
         return root;
     }
 }

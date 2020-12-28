@@ -1,6 +1,7 @@
 package leetcode.leetcode111;
 
 import java.util.*;
+import leetcode.common.*;
 
 /*
  * @lc app=leetcode.cn id=111 lang=java
@@ -49,65 +50,71 @@ import java.util.*;
  *  } 
  * }
  */
-class TreeNode {
-    int val;
-    TreeNode left;
-    TreeNode right;
-
-    TreeNode(int x) {
-        val = x;
-    }
-}
 
 public class Solution {
     public int minDepth(TreeNode root) {
-        // return depthDFS(root);
         return depthBFS(root);
+        // return depthDFSByRecursion(root);
     }
 
-    private int depthDFS(TreeNode node) {
-        if (node == null)
-            return 0;
-        if (node.left == null && node.right == null)
-            return 1;
-        int minDepth = Integer.MAX_VALUE;
-        if(node.left != null){
-            minDepth = Math.min(depthDFS(node.left), minDepth);
+    // 深度优先遍历
+    private int depthDFSByRecursion(TreeNode node) {
+        if(node == null) return 0;
+        int leftDepth = depthDFSByRecursion(node.left)+1;
+        int rightDepth =depthDFSByRecursion(node.right)+1;
+        if(node.left != null && node.right != null){
+            return Math.min(leftDepth, rightDepth);
         }
-        if(node.right != null){
-            minDepth = Math.min(depthDFS(node.right), minDepth);
-        }
-        return minDepth + 1;
+        return Math.max(leftDepth, rightDepth);
     }
 
+    // private int depthDFSByStack(TreeNode node) {
+    //     if(node == null) return 0;
+    //     int depth = 0;
+    //     int minDepth = Integer.MIN_VALUE;
+    //     LinkedList<TreeNode> stack = new LinkedList<>();
+    //     while(node != null || !stack.isEmpty()){
+    //         if(node.left != null){
+    //             stack.addLast(node.left);
+    //             node = node.left;
+    //             depth++;
+    //         }
+
+    //         node = stack.removeFirst();
+    //         depth--;
+    //         if(node.right != null){
+    //             node = node.right;
+    //             depth++;
+    //         }
+    //     }
+    //     return 0;
+    // }
+
+    // 广度优先遍历
     private int depthBFS(TreeNode node){
-        if (node == null)
-            return 0;
-        if (node.left == null && node.right == null)
-            return 1;
-        
-        Queue<TreeNode> queue = new LinkedList<>();
-        queue.add(node);
+        if(node == null) return 0;
 
-        int depth = 1;
-        while(!queue.isEmpty()){
-            int len = queue.size();
-
-            for (int i = 0; i < len; i++) {
-                TreeNode n = queue.remove();
-                if(n.left == null && n.right == null){
+        int depth = 0;
+        Deque<TreeNode> deque = new LinkedList<>();
+        deque.add(node);
+        while(!deque.isEmpty()){
+            depth++;
+            int size = deque.size();
+            for (int i = 0; i < size; i++) {
+                TreeNode cur = deque.removeLast();
+                if(cur.left == null && cur.right==null){
                     return depth;
                 }
-                if(n.left != null){
-                    queue.add(n.left);
+                if(cur.left != null){
+                    deque.addFirst(cur.left);
                 }
-                if(n.right != null){
-                    queue.add(n.right);
+                if(cur.right != null){
+                    deque.addFirst(cur.right);
                 }
             }
-            depth++;
+
         }
-        return -1;
+        return depth;
     }
 }
 // @lc code=end

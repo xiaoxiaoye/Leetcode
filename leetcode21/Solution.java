@@ -1,5 +1,6 @@
 package leetcode.leetcode21;
 
+import leetcode.common.*;
 /*
  * @lc app=leetcode.cn id=21 lang=java
  *

@@ -1,82 +1,94 @@
 package leetcode.leetcode25;
 
+import leetcode.common.*;
 
-class ListNode {
-    int val;
-    ListNode next;
+/*
+ * @lc app=leetcode.cn id=25 lang=java
+ *
+ * [25] K 个一组翻转链表
+ *
+ * https://leetcode-cn.com/problems/reverse-nodes-in-k-group/description/
+ *
+ * algorithms
+ * Hard (63.65%)
+ * Likes:    808
+ * Dislikes: 0
+ * Total Accepted:    117.8K
+ * Total Submissions: 185K
+ * Testcase Example:  '[1,2,3,4,5]\n2'
+ *
+ * 给你一个链表，每 k 个节点一组进行翻转，请你返回翻转后的链表。
+ * 
+ * k 是一个正整数，它的值小于或等于链表的长度。
+ * 
+ * 如果节点总数不是 k 的整数倍，那么请将最后剩余的节点保持原有顺序。
+ * 
+ * 
+ * 
+ * 示例：
+ * 
+ * 给你这个链表：1->2->3->4->5
+ * 
+ * 当 k = 2 时，应当返回: 2->1->4->3->5
+ * 
+ * 当 k = 3 时，应当返回: 3->2->1->4->5
+ * 
+ * 
+ * 
+ * 说明：
+ * 
+ * 
+ * 你的算法只能使用常数的额外空间。
+ * 你不能只是单纯的改变节点内部的值，而是需要实际进行节点交换。
+ * 
+ * 
+ */
 
-    ListNode(int x) {
-        val = x;
-    }
-}
+// @lc code=start
+/**
+ * Definition for singly-linked list. public class ListNode { int val; ListNode
+ * next; ListNode() {} ListNode(int val) { this.val = val; } ListNode(int val,
+ * ListNode next) { this.val = val; this.next = next; } }
+ */
 class Solution {
     public ListNode reverseKGroup(ListNode head, int k) {
         ListNode dummy = new ListNode(-1);
-        ListNode start = dummy;
-        ListNode end = dummy;
-        ListNode next = head;
-
-        ListNode tail = dummy;
-
-        while(next != null){
-            ListNode tmp = next;
-
-            int group = k;
-            while(--group > 0){
-                if(next.next == null) break;
-                next = next.next;
-            }
-            if(group != 0){
-                start.next = tmp;
-                break;
-            }
-
-            start = tmp;
-            end = next;
-            next = next.next;
-            end.next = null;
-
-            tail.next = reverse(start);
-            tail = start;
-        }
-
-
-        return dummy.next;
-    }
-
-    // 题解中代码更加清晰的版本 https://leetcode-cn.com/problems/reverse-nodes-in-k-group/solution/tu-jie-kge-yi-zu-fan-zhuan-lian-biao-by-user7208t/
-    public ListNode reverseKGroup_(ListNode head, int k) {
-        ListNode dummy = new ListNode(0);
         dummy.next = head;
-    
-        ListNode pre = dummy;
-        ListNode end = dummy;
-    
-        while (end.next != null) {
-            for (int i = 0; i < k && end != null; i++) end = end.next;
-            if (end == null) break;
-            ListNode start = pre.next;
-            ListNode next = end.next;
-            end.next = null;
-            pre.next = reverse(start);
-            start.next = next;
-            pre = start;
-    
-            end = pre;
+
+        ListNode prev = dummy;
+        while (true) {
+            ListNode groupStart = prev.next;
+            ListNode groupEnd = prev.next;
+
+            for (int i = 1; i < k && groupEnd != null; i++) {
+                groupEnd = groupEnd.next;
+            }
+            if (groupEnd == null)
+                break;
+            ListNode nextGroupStart = groupEnd.next;
+            groupEnd.next = null;
+
+            prev.next = reverse(groupStart);
+
+            // 将当前组和下一组连接，防止下一组数量不够无法翻转而丢失
+            groupStart.next = nextGroupStart;
+
+            prev = groupStart;
         }
+
         return dummy.next;
     }
 
-    // group的翻转
-    public ListNode reverse(ListNode head){
+    // 链表翻转
+    private ListNode reverse(ListNode head) {
         ListNode dummy = new ListNode(-1);
-        ListNode curNode = head;
 
-        while(curNode != null){
-            ListNode nextNode = curNode.next;
-            curNode.next = dummy.next;
-            dummy.next = curNode;
-            curNode = nextNode;
+        ListNode cur = head;
+        while (cur != null) {
+            ListNode next = cur.next;
+            cur.next = dummy.next;
+            dummy.next = cur;
+            cur = next;
         }
         return dummy.next;
     }
@@ -94,10 +106,11 @@ class Solution {
         n3.next = n4;
         n4.next = n5;
 
-        ListNode r1 = s.reverseKGroup_(n1, 3);
-        while(r1 != null){
+        ListNode r1 = s.reverseKGroup(n1, 3);
+        while (r1 != null) {
             System.out.println(r1.val);
             r1 = r1.next;
         }
     }
 }
+// @lc code=end

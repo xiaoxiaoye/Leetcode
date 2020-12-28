@@ -1,5 +1,6 @@
 package leetcode.leetcode110;
 
+import leetcode.common.*;
 
 /*
  * @lc app=leetcode.cn id=110 lang=java
@@ -63,27 +64,34 @@ package leetcode.leetcode110;
  *     TreeNode(int x) { val = x; }
  * }
  */
-class TreeNode {
-    int val;
-    TreeNode left;
-    TreeNode right;
-    TreeNode(int x) { val = x; }
-}
+
 public class Solution {
+    // public boolean isBalanced(TreeNode root) {
+    //     if(root == null) return true;
+    //     return Math.abs(height(root.left) - height(root.right)) <=1 && isBalanced(root.left) && isBalanced(root.right);
+    // }
+
+    // private int height(TreeNode node){
+    //     if(node == null) return 0;
+    //     return Math.max(height(node.left), height(node.right))+1;
+    // }
+
+    // 自底向上，减少height的调用次数
     public boolean isBalanced(TreeNode root) {
-        return depth(root) != -1;
+        if(root == null) return true;
+        return height(root) != -1;
     }
 
-    private int depth(TreeNode node){
-        if(node == null) return 0;
-        int leftDepth = depth(node.left);
-        if(leftDepth == -1) return -1;
-
-        int rightDepth = depth(node.right);
-        if(rightDepth == -1) return -1;
-
-        if(Math.abs(leftDepth - rightDepth) > 1) return -1;
-        return Math.max(leftDepth, rightDepth) + 1;
+    private int height(TreeNode node){
+        if(node == null)
+            return 0;
+        int leftHeight = height(node.left);
+        int rightHeight = height(node.right);
+        if(leftHeight == -1 || rightHeight==-1||Math.abs(leftHeight-rightHeight)>1){
+            return -1;
+        } else {
+            return Math.max(leftHeight, rightHeight)+1;
+        }
     }
 }
 // @lc code=end

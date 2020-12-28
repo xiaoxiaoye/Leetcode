@@ -1,5 +1,8 @@
 package leetcode.leetcode114;
 
+import java.util.LinkedList;
+import java.util.List;
+import leetcode.common.*;
 /*
  * @lc app=leetcode.cn id=114 lang=java
  *
@@ -51,84 +54,74 @@ package leetcode.leetcode114;
  *     TreeNode(int x) { val = x; }
  * }
  */
-
-
-class TreeNode {
-     int val;
-     TreeNode left;
-     TreeNode right;
-     TreeNode(int x) { val = x; }
- }
-
-// 参考题解： https://leetcode-cn.com/problems/flatten-binary-tree-to-linked-list/solution/xiang-xi-tong-su-de-si-lu-fen-xi-duo-jie-fa-by--26/
-/** 
-    1
-   / \
-  2   5
- / \   \
-3   4   6
-
-//将 1 的左子树插入到右子树的地方
-    1
-     \
-      2         5
-     / \         \
-    3   4         6        
-//将原来的右子树接到左子树的最右边节点
-    1
-     \
-      2          
-     / \          
-    3   4  
-         \
-          5
-           \
-            6
-            
- //将 2 的左子树插入到右子树的地方
-    1
-     \
-      2          
-       \          
-        3       4  
-                 \
-                  5
-                   \
-                    6   
-        
- //将原来的右子树接到左子树的最右边节点
-    1
-     \
-      2          
-       \          
-        3      
-         \
-          4  
-           \
-            5
-             \
-              6
-*/
 class Solution {
+    // 利用递归
+    public void flatten_recusive(TreeNode root) {
+        if (root == null) return;
+        List<TreeNode> orderList = new LinkedList<>();
+        preTravelsal(root, orderList);
 
+        for (int i = 1; i < orderList.size(); i++) {
+            TreeNode prev = orderList.get(i-1);
+            prev.left = null;
+            prev.right = orderList.get(i);
+        }
+    }
 
-    public void flatten(TreeNode root) {
-        while(root != null){
-            if(root.left == null){
-                root = root.right;
-            } else {
-                TreeNode pre = root.left;
-                while(pre.right != null){
-                    pre = pre.right;
+    private void preTravelsal(TreeNode node, List<TreeNode> orderList){
+        LinkedList<TreeNode> stack = new LinkedList<>();
+        while(!stack.isEmpty() || node != null){
+            while(node != null){
+                orderList.add(node);
+                stack.addFirst(node);
+                node = node.left;
+            }
+            node = stack.removeFirst();
+            node = node.right;
+        }
+    }
+
+    // 利用stack模拟递归
+    public void flatten_stack(TreeNode root) {
+        if(root == null) return;
+        LinkedList<TreeNode> stack = new LinkedList<>();
+        stack.add(root);
+        TreeNode prev = null;
+        while(!stack.isEmpty()){
+            TreeNode cur = stack.removeFirst();
+            if(prev != null){
+                prev.left = null;
+                prev.right = cur;
+            }
+
+            if(cur.right != null){
+                stack.addFirst(cur.right);
+            }
+
+            if(cur.left != null){
+                stack.addFirst(cur.left);
+            }
+
+            prev = cur;
+        }
+    }
+
+    public void flatten(TreeNode root){
+        TreeNode cur = root;
+        while(cur != null){
+            if(cur.left != null){
+                TreeNode next = cur.left;
+                TreeNode predecessor = next;
+                while(predecessor.right != null){
+                    predecessor = predecessor.right;
                 }
 
-                pre.right = root.right;
-
-                root.right = root.left;
-                root.left = null;
-
-                root = root.right;
+                predecessor.right = cur.right;
+                cur.left = null;
+                cur.right = next;
             }
+
+            cur = cur.right;
         }
     }
 }

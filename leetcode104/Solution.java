@@ -1,48 +1,69 @@
 package leetcode.leetcode104;
 
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode(int x) { val = x; }
- * }
+import leetcode.common.*;
+
+/*
+ * @lc app=leetcode.cn id=104 lang=java
+ *
+ * [104] 二叉树的最大深度
+ *
+ * https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/description/
+ *
+ * algorithms
+ * Easy (75.39%)
+ * Likes:    761
+ * Dislikes: 0
+ * Total Accepted:    320.7K
+ * Total Submissions: 425.1K
+ * Testcase Example:  '[3,9,20,null,null,15,7]'
+ *
+ * 给定一个二叉树，找出其最大深度。
+ * 
+ * 二叉树的深度为根节点到最远叶子节点的最长路径上的节点数。
+ * 
+ * 说明: 叶子节点是指没有子节点的节点。
+ * 
+ * 示例：
+ * 给定二叉树 [3,9,20,null,null,15,7]，
+ * 
+ * ⁠   3
+ * ⁠  / \
+ * ⁠ 9  20
+ * ⁠   /  \
+ * ⁠  15   7
+ * 
+ * 返回它的最大深度 3 。
+ * 
  */
 
-class TreeNode {
-    int val;
-    TreeNode left;
-    TreeNode right;
-    TreeNode(int x) { val = x; }
-}
-
-// DFS利用深度优先搜索
+// @lc code=start
+/**
+ * Definition for a binary tree node. public class TreeNode { int val; TreeNode
+ * left; TreeNode right; TreeNode() {} TreeNode(int val) { this.val = val; }
+ * TreeNode(int val, TreeNode left, TreeNode right) { this.val = val; this.left
+ * = left; this.right = right; } }
+ */
 class Solution {
+
+    private int maxDepth = Integer.MIN_VALUE;
+
     public int maxDepth(TreeNode root) {
-        return recurTreeDepth(root, 0);
+        if (root == null)
+            return 0;
+
+        dfs(root, 0);
+        return maxDepth;
     }
-    private int recurTreeDepth(TreeNode node, int depth){
-        if(node == null) return depth;
+
+    private void dfs(TreeNode node, int depth) {
+        if (node == null) {
+            if (depth > maxDepth)
+                maxDepth = depth;
+            return;
+        }
         depth++;
-        int left = recurTreeDepth(node.left, depth);
-        int right = recurTreeDepth(node.right, depth);
-        return left > right ? left : right;
-    }
-
-    public static void main(String[] args) {
-        TreeNode root = new TreeNode(4);
-        TreeNode node2 = new TreeNode(2);
-        TreeNode node7 = new TreeNode(7);
-        TreeNode node6 = new TreeNode(6);
-        TreeNode node9 = new TreeNode(9);
-        root.left = node2;
-        root.right = node7;
-        node7.left = node6;
-        node7.right = node9;
-
-        Solution s = new Solution();
-        int depth = s.maxDepth(root);
-        System.out.println(depth);
+        dfs(node.left, depth);
+        dfs(node.right, depth);
     }
 }
+// @lc code=end

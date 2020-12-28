@@ -1,5 +1,10 @@
 package leetcode.leetcode160;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import leetcode.common.*;
+
 /*
  * @lc app=leetcode.cn id=160 lang=java
  *
@@ -77,35 +82,40 @@ package leetcode.leetcode160;
 
 // @lc code=start
 /**
- * Definition for singly-linked list.
- * public class ListNode {
- *     int val;
- *     ListNode next;
- *     ListNode(int x) {
- *         val = x;
- *         next = null;
- *     }
- * }
+ * Definition for singly-linked list. public class ListNode { int val; ListNode
+ * next; ListNode(int x) { val = x; next = null; } }
  */
 
-class ListNode {
-    int val;
-    ListNode next;
-    ListNode(int x) {
-        val = x;
-        next = null;
-    }
-}
-
 public class Solution {
+    // 利用双指针
     public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
-        
+        ListNode pA = headA;
+        ListNode pB = headB;
+        while (pA != null || pB != null) {
+            if (pA == pB)
+                return pA;
+            pA = pA == null ? headB : pA.next;
+            pB = pB == null ? headA : pB.next;
+        }
         return null;
     }
 
-    public static void main(String[] args) {
-        
+    // 利用hash表
+    public ListNode getIntersectionNode_(ListNode headA, ListNode headB) {
+        Set<ListNode> dupCheck = new HashSet<>();
+        ListNode pA = headA;
+        ListNode pB = headB;
+
+        while (pA != null || pB != null) {
+            if(pA != null && !dupCheck.add(pA)) return pA;
+            if(pB != null && !dupCheck.add(pB)) return pB;
+
+            if(pA != null)
+                pA = pA.next;
+            if(pB != null)
+                pB = pB.next;
+        }
+        return null;
     }
 }
 // @lc code=end
-

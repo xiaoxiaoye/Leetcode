@@ -1,6 +1,7 @@
 package leetcode.leetcode105;
 
 import java.util.*;
+import leetcode.common.*;
 
 /*
  * @lc app=leetcode.cn id=105 lang=java
@@ -39,61 +40,78 @@ import java.util.*;
 
 // @lc code=start
 /**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode(int x) { val = x; }
- * }
+ * Definition for a binary tree node. public class TreeNode { int val; TreeNode
+ * left; TreeNode right; TreeNode(int x) { val = x; } }
  */
-class TreeNode {
-    int val;
-    TreeNode left;
-    TreeNode right;
-    TreeNode(int x) { val = x; }
-}
+
 public class Solution {
+    private HashMap<Integer, Integer> pivotMap = new HashMap<>();
+
+    // public TreeNode buildTree(int[] preorder, int[] inorder) {
+    //     if (preorder.length == 0 || inorder.length == 0)
+    //         return null;
+    //     // 没有重复的元素，可以利用map快速找到中序遍历的位置，得到左子树和右子树的数目。
+    //     for (int i = 0; i < inorder.length; i++) {
+    //         pivotMap.put(inorder[i], i);
+    //     }
+    //     TreeNode root = new TreeNode(preorder[0]);
+    //     helper(preorder, 0, preorder.length - 1, inorder, 0, inorder.length - 1, root);
+    //     return root;
+    // }
+
+    // private void helper(int[] preorder, int preStart, int preEnd, int[] inorder, int inStart, int inEnd,
+    //         TreeNode root) {
+    //     int pivot = findPivot(root.val);
+    //     int leftLength = pivot - inStart;
+    //     // 构建左子树
+    //     if (pivot > inStart) {
+    //         root.left = new TreeNode(preorder[preStart + 1]);
+    //         helper(preorder, preStart + 1, preStart + leftLength, inorder, inStart, pivot - 1, root.left);
+    //     }
+
+    //     // 构建右子树
+    //     if (pivot != inEnd) {
+    //         root.right = new TreeNode(preorder[preStart + leftLength + 1]);
+    //         helper(preorder, preStart + leftLength + 1, preEnd, inorder, pivot + 1, inEnd, root.right);
+    //     }
+    // }
+
     public TreeNode buildTree(int[] preorder, int[] inorder) {
-        if(preorder.length == 0) return null;
-        TreeNode root = new TreeNode(preorder[0]);
-        buildTreeRecursion(preorder, inorder, root);
+        if (preorder.length == 0 || inorder.length == 0)
+            return null;
+        // 没有重复的元素，可以利用map快速找到中序遍历的位置，得到左子树和右子树的数目。
+        for (int i = 0; i < inorder.length; i++) {
+            pivotMap.put(inorder[i], i);
+        }
+        int length = preorder.length;
+        return buildTreeHelper(preorder, 0, length-1, inorder, 0, length-1);
+    }
+
+    private TreeNode buildTreeHelper(int[] preorder, int preStart, int preEnd, int[] inorder, int inStart, int inEnd){
+        if(preStart>preEnd) return null;
+        int pivot = findPivot(preorder[preStart]);
+        int leftLength = pivot - inStart;
+        TreeNode root = new TreeNode(preorder[preStart]);
+        if(pivot>inStart){
+            root.left = buildTreeHelper(preorder, preStart + 1, preStart + leftLength, inorder, inStart, pivot - 1);
+        }
+
+        if(pivot != inEnd){
+            root.right = buildTreeHelper(preorder, preStart + leftLength + 1, preEnd, inorder, pivot + 1, inEnd);
+        }
         return root;
     }
 
-    private void buildTreeRecursion(int[] preorder, int[] inorder, TreeNode root){
-        if(preorder.length <= 1) return;
-        int pivot = findNode(root.val, inorder);
-
-        if(pivot != 0){
-            TreeNode left = new TreeNode(preorder[1]);
-            root.left = left;
-            buildTreeRecursion(Arrays.copyOfRange(preorder, 1, pivot+1), Arrays.copyOfRange(inorder, 0, pivot), left);
-        }
-        if(pivot != inorder.length-1){
-            TreeNode right = new TreeNode(preorder[pivot+1]);
-            root.right = right;
-            buildTreeRecursion(Arrays.copyOfRange(preorder, pivot+1, preorder.length), Arrays.copyOfRange(inorder, pivot+1, inorder.length), right);
-        }
-    }
-
-    private int findNode(int val, int[] nodes){
-        for (int i = 0; i < nodes.length; i++) {
-            if(nodes[i] == val){
-                return i;
-            }
+    private int findPivot(int rootVal) {
+        if (pivotMap.containsKey(rootVal)) {
+            return pivotMap.get(rootVal);
         }
         return -1;
     }
 
     public static void main(String[] args) {
-        Solution s = new Solution();
-        int[] preorder = {1,2};
-        int[] inorder = {1,2};
-
-        TreeNode tree = s.buildTree(preorder, inorder);
-
-        System.out.println(""+tree.val);
+        Solution solution = new Solution();
+        TreeNode result = solution.buildTree(new int[] { 3, 9, 20, 15, 7 }, new int[] { 9, 3, 15, 20, 7 });
     }
 }
 // @lc code=end

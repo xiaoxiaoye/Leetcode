@@ -1,7 +1,7 @@
 package leetcode.leetcode103;
 
 import java.util.*;
-
+import leetcode.common.*;
 
 /*
  * @lc app=leetcode.cn id=103 lang=java
@@ -43,55 +43,40 @@ import java.util.*;
 
 // @lc code=start
 /**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode(int x) { val = x; }
- * }
+ * Definition for a binary tree node. public class TreeNode { int val; TreeNode
+ * left; TreeNode right; TreeNode(int x) { val = x; } }
  */
 
-class TreeNode {
-     int val;
-     TreeNode left;
-     TreeNode right;
-     TreeNode(int x) { val = x; }
- }
-
-//  题解类似102题的解法，只需要在奇数层的时候，将结果集逆序插入即可
+// 题解类似102题的解法，只需要在奇数层的时候，将结果集逆序插入即可
 public class Solution {
     public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
-        List<List<Integer>> result = new LinkedList<>();
-
-        LinkedList<TreeNode> queue = new LinkedList<>();
-        if(root == null) return result;
-        queue.add(root);
-
-        int level = 0;
-        while(!queue.isEmpty()){
-            LinkedList<Integer> levelList = new LinkedList<>();
-            
-            int len = queue.size();
-            for (int i = 0; i < len; i++) {
-                TreeNode node = queue.poll();
-                if(level % 2 == 0) {
-                    levelList.addLast(node.val);
-                } else {
-                    levelList.addFirst(node.val);
+        if (root == null)
+            return Collections.emptyList();
+        List<List<Integer>> results = new ArrayList<>();
+        Deque<TreeNode> deque = new LinkedList<>();
+        int treeLevel = 1;
+        deque.addFirst(root);
+        while (!deque.isEmpty()) {
+            int size = deque.size();
+            LinkedList<Integer> levelItems = new LinkedList<>();
+            for (int i = 0; i < size; i++) {
+                TreeNode node = deque.removeLast();
+                if (node.left != null) {
+                    deque.addFirst(node.left);
                 }
-
-                if(node.left != null)
-                    queue.add(node.left);
-                if(node.right != null)
-                    queue.add(node.right);
+                if (node.right != null) {
+                    deque.addFirst(node.right);
+                }
+                if (treeLevel % 2 == 0) {
+                    levelItems.addFirst(node.val);
+                } else {
+                    levelItems.addLast(node.val);
+                }
             }
-
-            result.add(levelList);
-            level++;
+            results.add(levelItems);
+            treeLevel++;
         }
-        return result;
+        return results;
     }
 }
 // @lc code=end
-

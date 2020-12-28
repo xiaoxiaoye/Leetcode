@@ -1,55 +1,93 @@
 package leetcode.leetcode234;
 
-class ListNode {
-    int val;
-    ListNode next;
+import leetcode.common.*;
+/*
+ * @lc app=leetcode.cn id=234 lang=java
+ *
+ * [234] 回文链表
+ *
+ * https://leetcode-cn.com/problems/palindrome-linked-list/description/
+ *
+ * algorithms
+ * Easy (39.37%)
+ * Likes:    587
+ * Dislikes: 0
+ * Total Accepted:    112K
+ * Total Submissions: 261.4K
+ * Testcase Example:  '[1,2]'
+ *
+ * 请判断一个链表是否为回文链表。
+ * 
+ * 示例 1:
+ * 
+ * 输入: 1->2
+ * 输出: false
+ * 
+ * 示例 2:
+ * 
+ * 输入: 1->2->2->1
+ * 输出: true
+ * 
+ * 
+ * 进阶：
+ * 你能否用 O(n) 时间复杂度和 O(1) 空间复杂度解决此题？
+ * 
+ */
 
-    ListNode(int x) {
-        val = x;
-    }
-}
-
-public class Solution {
+// @lc code=start
+/**
+ * Definition for singly-linked list. public class ListNode { int val; ListNode
+ * next; ListNode(int x) { val = x; } }
+ */
+class Solution {
     public boolean isPalindrome(ListNode head) {
-        ListNode reserved = new ListNode(-1);
-        ListNode fast = head;
-        ListNode slow = head;
-        while (fast != null && fast.next != null) {
-            ListNode prev = slow;
-            fast = fast.next.next;
-            slow = slow.next;
-
-            // 翻转前半部分链表
-            prev.next = reserved.next;
-            reserved.next = prev;
+        if (head == null || head.next == null)
+            return true;
+        
+        // 找到中位点
+        ListNode s = head;
+        ListNode f = head;
+        while (f.next != null && f.next.next != null) {
+            f = f.next.next;
+            s = s.next;
         }
 
-        // 验证是否回文串
-        ListNode unreserved = fast == null ? slow : slow.next;
-        reserved = reserved.next;
-        while (reserved != null) {
-            if (reserved.val != unreserved.val) {
+        // 翻转后半部分
+        ListNode next = s.next;
+        s.next = null;
+        ListNode rStart = reverse(next);
+
+        // 首位依次对比， 奇数的中位点可忽略不对比
+        ListNode lStart = head;
+        while (lStart != null && rStart != null) {
+            if (lStart.val != rStart.val)
                 return false;
-            }
-            reserved = reserved.next;
-            unreserved = unreserved.next;
+            lStart = lStart.next;
+            rStart = rStart.next;
         }
         return true;
     }
 
-    public static void main(String[] args) {
-        Solution s = new Solution();
+    /**
+     * 链表翻转
+     * 
+     * @param head
+     * @return
+     */
+    private ListNode reverse(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+        ListNode dummy = new ListNode();
 
-        ListNode list = new ListNode(1);
-        ListNode node1 = new ListNode(2);
-        ListNode node2 = new ListNode(2);
-        ListNode node3 = new ListNode(1);
-        list.next = node1;
-        node1.next = node2;
-        node2.next = node3;
+        ListNode cur = head;
+        while (cur != null) {
+            ListNode next = cur.next;
+            cur.next = dummy.next;
+            dummy.next = cur;
 
-        boolean r = s.isPalindrome(list);
-        System.out.println(r);
-
+            cur = next;
+        }
+        return dummy.next;
     }
 }
+// @lc code=end
