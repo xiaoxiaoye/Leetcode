@@ -1,5 +1,7 @@
 package leetcode.leetcode117;
 
+import leetcode.common.*;
+
 /*
  * @lc app=leetcode.cn id=117 lang=java
  *
@@ -63,6 +65,7 @@ package leetcode.leetcode117;
  * 
  */
 
+// @lc code=start
 /*
 // Definition for a Node.
 class Node {
@@ -85,73 +88,44 @@ class Node {
     }
 };
 */
-
-class Node {
-    public int val;
-    public Node left;
-    public Node right;
-    public Node next;
-
-    public Node() {
-    }
-
-    public Node(int _val) {
-        val = _val;
-    }
-
-    public Node(int _val, Node _left, Node _right, Node _next) {
-        val = _val;
-        left = _left;
-        right = _right;
-        next = _next;
-    }
-};
-
-// @lc code=start
 class Solution {
     public Node connect(Node root) {
-        if (root == null)
-            return root;
+        if (root == null) return root;
 
-        Node level = root;
-        Node cur = null;
-        while (true) {
-            cur = level;
-            while (cur != null) {
-                // 找到一个当前节点子节点不为空的
-                if(cur.left == null && cur.right == null){
-                    cur = cur.next;
-                    continue;
-                }
-                // 当前节点的左右节点都不为空
+        Node head = root;
+        while(head != null){
+            while(head != null && head.left == null && head.right == null){
+                head = head.next;
+            }
+            if(head == null) break;
+
+            Node cur = head;
+            while(cur != null){
+                Node next = next(cur);
                 if(cur.left != null && cur.right != null){
                     cur.left.next = cur.right;
                 }
-
-                Node tmpCur = cur.right == null ? cur.left : cur.right;
-    
-                Node next = cur.next;
-                while(next != null && next.left == null && next.right == null){
-                    next = next.next;
-                }
-
                 if(next != null){
-                    Node tmpNext = next.left == null ? next.right : next.left;
-                    tmpCur.next = tmpNext;
+                    Node left = cur.right != null ? cur.right : cur.left;
+                    Node right = next.left != null ? next.left : next.right;
+                    left.next = right;
                 }
-
-                cur = cur.next;
+                cur=next;
             }
-
-            // 判断当前层是否为最后一层
-            while(level.left == null && level.right == null){
-                level = level.next;
-                if(level == null){
-                    return root;
-                }
-            }
-            level = level.left == null ? level.right:level.left;
+            
+            head = head.left != null?head.left:head.right;
         }
+        return root;
+    }
+
+
+    private Node next(Node node){
+        node = node.next;
+        while(node != null && node.left == null && node.right == null){
+            node = node.next;
+        }
+        return node;
     }
 }
 // @lc code=end
+

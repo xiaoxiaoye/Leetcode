@@ -1,5 +1,8 @@
 package leetcode.leetcode222;
 
+import java.util.*;
+import leetcode.common.*;
+
 
 /*
  * @lc app=leetcode.cn id=222 lang=java
@@ -46,65 +49,56 @@ package leetcode.leetcode222;
  *     TreeNode(int x) { val = x; }
  * }
  */
-class TreeNode {
-    int val;
-    TreeNode left;
-    TreeNode right;
-    TreeNode(int x) { val = x; }
-}
 
 // @lc code=start
 class Solution {
     public int countNodes(TreeNode root) {
         if(root == null) return 0;
-        int depth = depthTree(root);
-        if(depth == 0) return 1;
-        int lastDepthMaxLen = (int)Math.pow(2, depth);
+        int depth = treeDepth(root);
+        int lastMaxLen = (int)Math.pow(2, depth);
         int low = 0;
-        int high = lastDepthMaxLen - 1;
+        int high = lastMaxLen-1;
+
         while(low <= high){
-            int middle = low + (high - low) / 2;
-            if(findInDepth(root, depth, middle)){
-                // 此处需要考虑完全二叉树的情况，此时findInDepth会一直返回true
-                // if(!findInDepth(root, depth, middle+1)){
-                //     lastDepthLen = middle + 1;
-                //     break;
-                // } else {
-                //     low = middle + 1;
-                // }
-                low = middle + 1;
-            } else {
-                high = middle - 1;
+            int middle = low + (high-low)/2;
+            if(findInDepth(root, depth, lastMaxLen, middle)){
+                low = middle+1;
+            }else{
+                high = middle-1;
             }
         }
+        return lastMaxLen-1+low;
 
-        return (int)Math.pow(2, depth) -1  + low;
     }
 
-    private boolean findInDepth(TreeNode node, int depth, int index){
-        int low = 0;
-        int high = (int)Math.pow(2, depth) - 1;
+
+    private int treeDepth(TreeNode node){
+        int d = 0;
+        while(node != null){
+            d++;
+            node = node.left;
+        }
+        return d-1;
+    }
+
+    private boolean findInDepth(TreeNode node, int depth, int lastMaxLen, int index){
+        int left = 0;
+        int right = lastMaxLen-1;
         for (int i = 0; i < depth; i++) {
-            int middle = low + (high - low)/2;
-            if(index <= middle){
+            int middle = left + (right-left)/2;
+            if(index<=middle){
                 node = node.left;
-                high = middle - 1;
+                right = middle-1;
             } else {
                 node = node.right;
-                low = middle + 1;
+                left = middle+1;
             }
         }
+
         return node != null;
     }
 
-    private int depthTree(TreeNode node) {
-        int depth = -1;
-        while(node != null){
-            node = node.left;
-            depth++;
-        }
-        return depth;
-    }
+
 
     public static void main(String[] args) {
         Solution s = new Solution();

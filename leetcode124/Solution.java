@@ -1,5 +1,7 @@
 package leetcode.leetcode124;
 
+import leetcode.common.*;
+
 /*
  * @lc app=leetcode.cn id=124 lang=java
  *
@@ -53,37 +55,27 @@ package leetcode.leetcode124;
  *     TreeNode(int x) { val = x; }
  * }
  */
-class TreeNode {
-    int val;
-    TreeNode left;
-    TreeNode right;
-    TreeNode(int x) { val = x; }
-}
 
 // @lc code=start
 class Solution {
-    int max_sum = Integer.MIN_VALUE;
+    int maxSum = Integer.MIN_VALUE;
 
     public int maxPathSum(TreeNode root) {
-        max_gain(root);
-        return max_sum;
+        maxGain(root);
+        return maxSum;
     }
 
-    private int max_gain(TreeNode node){
+    private int maxGain(TreeNode node){
         if(node == null) return 0;
 
         // 为负数的那一条路径给舍去
-        int left_gain = Math.max(max_gain(node.left),0);
-        int right_gain = Math.max(max_gain(node.right),0);
+        int left = Math.max(maxGain(node.left),0);
+        int right = Math.max(maxGain(node.right),0);
 
-        // 输入[2, -1], 下面的输出为1
-        // int left_gain = max_gain(node.left);
-        // int right_gain = max_gain(node.right);
+        int newPath = node.val + left + right;
+        maxSum = Math.max(maxSum, newPath);
 
-        int newPath = node.val + left_gain + right_gain;
-        max_sum = Math.max(max_sum, newPath);
-
-        return node.val + Math.max(left_gain, right_gain);
+        return node.val + Math.max(left, right);
     }
 }
 // @lc code=end

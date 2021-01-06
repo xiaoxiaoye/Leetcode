@@ -1,6 +1,7 @@
 package leetcode.leetcode145;
 
 import java.util.*;
+import leetcode.common.*;
 /*
  * @lc app=leetcode.cn id=145 lang=java
  *
@@ -44,48 +45,37 @@ import java.util.*;
  * }
  */
 
-class TreeNode {
-    int val;
-    TreeNode left;
-    TreeNode right;
-    TreeNode(int x) {val = x;}
-}
 
 class Solution {
     public List<Integer> postorderTraversal(TreeNode root) {
-        // List<Integer> result = new LinkedList<>();
-        // recursionTraversal(root, result);
-        // return result;
         return  stackTraversal(root);
-    }
-
-    // 基于递归遍历
-    private void recursionTraversal(TreeNode node, List<Integer> result){
-        if(node == null) return;
-        recursionTraversal(node.left, result);
-        recursionTraversal(node.right, result);
-        result.add(node.val);
     }
 
     // 基于迭代遍历
     private List<Integer> stackTraversal(TreeNode node){
-        LinkedList<Integer> ret = new LinkedList<>();
-        Stack<TreeNode> stack = new Stack<>();
-        TreeNode curr;
-        if(node == null) return ret;
-        stack.add(node);
-        while(!stack.isEmpty()){
-            curr = stack.pop();
-            ret.addFirst(curr.val);
-            if(curr.left != null){
-                stack.add(curr.left);
-            }
+        if(node == null) return Collections.emptyList();
 
-            if(curr.right != null){
-                stack.add(curr.right);
+        List<Integer> results = new LinkedList<>();
+        LinkedList<TreeNode> stack = new LinkedList<>();
+        TreeNode prev = null;
+        while(node != null || !stack.isEmpty()){
+            while(node != null){
+                stack.addFirst(node);
+                node = node.left;
             }
+            node = stack.removeFirst();
+
+            if(node.right != null && node.right != prev){
+                stack.addFirst(node);
+                node = node.right;
+                continue;
+            }
+            results.add(node.val);
+            prev = node;
+            // 右子树已经遍历，不需要再遍历一遍
+            node = null;
         }
-        return ret;
+        return results;
     }
 }
 // @lc code=end

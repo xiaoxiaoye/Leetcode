@@ -1,6 +1,7 @@
 package leetcode.leetcode173;
 
 import java.util.*;
+import leetcode.common.*;
 
 /*
  * @lc app=leetcode.cn id=173 lang=java
@@ -61,44 +62,103 @@ import java.util.*;
  */
 
 
-class TreeNode {
-    int val;
-    TreeNode left;
-    TreeNode right;
-    TreeNode(int x) { val = x; }
-}
-
 // @lc code=start
 class BSTIterator {
-
-    private Stack<TreeNode> stack;
-
+    private LinkedList<TreeNode> stack;
     public BSTIterator(TreeNode root) {
-        stack = new Stack<>();
-
-        _leftmostInorder(root);
-    }
-
-    private void _leftmostInorder(TreeNode node){
-        while(node != null){
-            stack.add(node);
-            node = node.left;
-        }
+       stack = new LinkedList<>();
+       while(root != null){
+           stack.addFirst(root);
+           root = root.left;
+       }
     }
     
     /** @return the next smallest number */
     public int next() {
-        TreeNode node = stack.pop();
-        if(node.right != null) {
-            _leftmostInorder(node.right);
+        TreeNode node = stack.removeFirst();
+        int value = node.val;
+
+        node = node.right;
+        while(node != null){
+            stack.addFirst(node);
+            node = node.left;
         }
-        return node.val;
+        
+        return value;
     }
     
     /** @return whether we have a next smallest number */
     public boolean hasNext() {
-        return !stack.empty();
+        return !stack.isEmpty();
     }
+}
+
+class BSTIteratorByMirror {
+    private TreeNode pre = null;
+    private TreeNode cur;
+
+    public BSTIteratorByMirror(TreeNode root){
+       cur = root; 
+    }
+
+    public int next(){
+        while(cur != null){
+            if(cur.left == null){
+                int v = cur.val;
+                cur = cur.right;
+                return v;
+            } else {
+                pre= cur.left;
+                while(pre.right != null && pre.right != cur){
+                    pre= pre.right;
+                }
+                if(pre.right == null){
+                    pre.right = cur;
+                    cur = cur.left;
+                } else {
+                    int v = cur.val;
+                    pre.right = null;
+                    cur = cur.right;
+                    return v;
+                }
+            }
+        }
+        return -1;
+    }
+
+    public boolean hasNext(){
+        return cur != null;
+    }
+
+    public static List<Integer> traversalByMirror(TreeNode node){
+        if(node == null){
+            return Collections.emptyList();
+        }
+        List<Integer> results = new LinkedList<>();
+        TreeNode predecessor = null;
+        while(node != null){
+            if(node.left == null){
+                results.add(node.val);
+                node = node.right;
+            } else {
+                predecessor = node.left;
+                while(predecessor.right != null && predecessor.right != node){
+                    predecessor = predecessor.right;
+                }
+                if(predecessor.right == null){
+                    predecessor.right = node;
+                    node = node.left;
+                } else {
+                    results.add(node.val);
+                    predecessor.right = null;
+                    node = node.right;
+                }
+            }
+        }
+
+        return results;
+    }
+
 }
 
 /**
@@ -121,15 +181,18 @@ public class Solution {
         node2.left = node3;
         node2.right = node4;
 
-        BSTIterator iterator = new BSTIterator(root);
-        iterator.next();    // 返回 3
-        iterator.next();    // 返回 7
-        iterator.hasNext(); // 返回 true
-        iterator.next();    // 返回 9
-        iterator.hasNext(); // 返回 true
-        iterator.next();    // 返回 15
-        iterator.hasNext(); // 返回 true
-        iterator.next();    // 返回 20
-        iterator.hasNext(); // 返回 false
+        List<Integer> res = BSTIteratorByMirror.traversalByMirror(root);
+        System.out.println(res);
+
+        BSTIteratorByMirror iterator = new BSTIteratorByMirror(root);
+        System.out.println(iterator.next());   // 返回 3
+        System.out.println(iterator.next());    // 返回 7
+        System.out.println(iterator.hasNext()); // 返回 true
+        System.out.println(iterator.next());    // 返回 9
+        System.out.println(iterator.hasNext()); // 返回 true
+        System.out.println(iterator.next());    // 返回 15
+        System.out.println(iterator.hasNext()); // 返回 true
+        System.out.println(iterator.next());    // 返回 20
+        System.out.println(iterator.hasNext()); // 返回 false
     }
 }

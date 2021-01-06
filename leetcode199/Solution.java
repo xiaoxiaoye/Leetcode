@@ -1,5 +1,8 @@
 package leetcode.leetcode199;
 
+import java.util.*;
+import leetcode.common.*;
+
 /*
  * @lc app=leetcode.cn id=199 lang=java
  *
@@ -42,41 +45,33 @@ package leetcode.leetcode199;
  * }
  */
 
-import java.util.*;
 
-class TreeNode {
-    int val;
-    TreeNode left;
-    TreeNode right;
-    TreeNode(int x) { val = x; }
-}
 
 // @lc code=start
 class Solution {
-
     public List<Integer> rightSideView(TreeNode root) {
         if(root == null) return Collections.emptyList();
-        List<Integer> rightView = new LinkedList<>();
-        Queue<TreeNode> queue = new LinkedList<>();
-        queue.add(root);
-        
-        while(!queue.isEmpty()){
-            int len = queue.size();
-            
-            for (int i = 0; i < len; i++) {
-                TreeNode node = queue.remove();
+        List<Integer> results = new LinkedList<>();    
+
+        Deque<TreeNode> deque = new LinkedList<>();
+        deque.offer(root);
+        while(!deque.isEmpty()){
+            int size = deque.size();
+            for (int i = 0; i < size; i++) {
+                TreeNode node = deque.pop();
+                if(i == size-1){
+                    results.add(node.val);
+                }
                 if(node.left != null){
-                    queue.add(node.left);
+                    deque.offer(node.left);
                 }
+
                 if(node.right != null){
-                    queue.add(node.right);
-                }
-                if(i == len - 1){
-                    rightView.add(node.val);
+                    deque.offer(node.right);
                 }
             }
         }
-        return rightView;
+        return results;
     }
 }
 // @lc code=end
