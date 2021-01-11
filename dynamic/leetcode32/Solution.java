@@ -1,4 +1,4 @@
-package leetcode.leetcode32;
+package leetcode.dynamic.leetcode32;
 
 import java.util.Stack;
 

@@ -1,4 +1,4 @@
-package leetcode.leetcode10;
+package leetcode.dynamic.leetcode10;
 
 class Solution {
     public boolean isMatch(String text, String pattern) {

@@ -1,4 +1,4 @@
-package leetcode.leetcode62;
+package leetcode.dynamic.leetcode62;
 
 /*
  * @lc app=leetcode.cn id=62 lang=java
