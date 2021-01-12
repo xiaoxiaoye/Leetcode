@@ -34,38 +34,73 @@ package leetcode.dynamic.leetcode5;
 
 // @lc code=start
 public class Solution {
-    public String longestPalindrome(String s) {
-        if (s.length() <= 1)
-            return s;
-        int start = 0, end = 0;
-        for (int i = 0; i < s.length(); i++) {
-            int len1 = expandAroundCenter(s, i, i);
-            int len2 = expandAroundCenter(s, i, i + 1);
+    // 暴力求解
+    public String longestPalindrome_(String s) {
+        if(s.length()<2) return s;
 
-            int len = Math.max(len1, len2);
-            if (len > (end - start + 1)) {
-                // 这里为什么是(len -1)有点不太好理解， 可以写个数列，试着算一下
-                // 0, 1, 2, 3, 4
-                // 如果i=1, 以1，2为中心扩展， len=4. start=1-4/2=-1, end=1+4/2=3. 
-                start = i - (len - 1) / 2;
-                end = i + (len / 2);
+        int begin=0;
+        int maxLen = 1;
+        char[] arrayString = s.toCharArray();
+        for (int i = 0; i < arrayString.length; i++) {
+            for(int j = i+1; j<arrayString.length; j++){
+                if(isPalindrome(arrayString, i, j)){
+                    int len = j-i+1;
+                    if(len>maxLen){
+                        begin=i;
+                        maxLen = len;
+                    }
+                }
             }
         }
-        return s.substring(start, end + 1);
+        return s.substring(begin, begin+maxLen);
     }
 
-    private int expandAroundCenter(String s, int begin, int end) {
-        int left = begin;
-        int right = end;
-
-        while (left >= 0 && right < s.length()) {
-            if (s.charAt(left) != s.charAt(right)) {
-                break;
-            }
-            left--;
-            right++;
+    private boolean isPalindrome(char[] s, int begin, int end){
+        for(int i=begin,j=end;i<=j;i++,j--){
+            if(s[i] != s[j]) return false;
         }
-        return right - left - 1;
+        return true;
+    }
+
+
+    // 动态规划求解
+    public String longestPalindrome(String s) {
+        if(s.length()<2) return s;
+
+        int begin = 0;
+        int maxLen = 1;
+        char[] arrayString = s.toCharArray();
+
+        boolean[][] dp = new boolean[arrayString.length][arrayString.length];
+        for (int i = 0; i < arrayString.length; i++) {
+            dp[i][i]=true;
+        }
+
+        for (int j = 1; j < arrayString.length; j++) {
+            for (int i = 0; i < j; i++) {
+                if(arrayString[i] != arrayString[j]){
+                    dp[i][j]=false;
+                } else {
+                    if(j-i<3){
+                        dp[i][j] = true;
+                    } else {
+                        dp[i][j] = dp[i+1][j-1];
+                    }
+                }
+
+                if(dp[i][j] && j-i+1>maxLen){
+                    begin = i;
+                    maxLen = j-i+1;
+                }
+            }
+        }
+
+        return s.substring(begin, begin+maxLen);
+    }
+
+    public static void main(String[] args) {
+        Solution s = new Solution();
+        System.out.println(s.longestPalindrome("babad"));
     }
 }
 // @lc code=end

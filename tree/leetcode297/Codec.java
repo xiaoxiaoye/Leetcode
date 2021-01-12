@@ -54,19 +54,21 @@ import java.util.*;
  * }
  */
 public class Codec {
-    public String rserialize(TreeNode root, String str) {
+    public void rserialize(TreeNode root, StringBuilder builder) {
         if (root == null) {
-            str += "None,";
+            builder.append("None,");
         } else {
-            str += str.valueOf(root.val) + ",";
-            str = rserialize(root.left, str);
-            str = rserialize(root.right, str);
+            builder.append(String.valueOf(root.val));
+            builder.append(",");
+            rserialize(root.left, builder);
+            rserialize(root.right, builder);
         }
-        return str;
     }
   
     public String serialize(TreeNode root) {
-        return rserialize(root, "");
+        StringBuilder builder = new StringBuilder();
+        rserialize(root, builder);
+        return builder.toString();
     }
   
     public TreeNode rdeserialize(List<String> l) {
@@ -84,9 +86,9 @@ public class Codec {
     }
   
     public TreeNode deserialize(String data) {
-        String[] data_array = data.split(",");
-        List<String> data_list = new LinkedList<String>(Arrays.asList(data_array));
-        return rdeserialize(data_list);
+        String[] dataArray = data.split(",");
+        List<String> dataList = new LinkedList<>(Arrays.asList(dataArray));
+        return rdeserialize(dataList);
     }
 }
 
