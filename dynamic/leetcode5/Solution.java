@@ -34,8 +34,11 @@ package leetcode.dynamic.leetcode5;
 
 // @lc code=start
 public class Solution {
+    public String longestPalindrome(String s){
+        return longestPalindrome_center(s);
+    }
     // 暴力求解
-    public String longestPalindrome_(String s) {
+    public String longestPalindrome_violence(String s) {
         if(s.length()<2) return s;
 
         int begin=0;
@@ -64,7 +67,7 @@ public class Solution {
 
 
     // 动态规划求解
-    public String longestPalindrome(String s) {
+    public String longestPalindrome_dp(String s) {
         if(s.length()<2) return s;
 
         int begin = 0;
@@ -98,9 +101,40 @@ public class Solution {
         return s.substring(begin, begin+maxLen);
     }
 
+
+    // 中心扩散法
+    public String longestPalindrome_center(String s){
+        if(s.length() < 2) return s;
+
+        String maxStr = "";
+        for (int i = 0; i < s.length()-1; i++) {
+            // 奇数串
+            String oddStr = centerExpand(s, i, i);
+            // 偶数串
+            String evenStr = centerExpand(s, i, i+1);
+            String max = oddStr.length() > evenStr.length() ? oddStr : evenStr;
+            if(max.length() > maxStr.length()){
+                maxStr = max;
+            }
+        }
+        return maxStr;
+    }
+
+    private String centerExpand(String s, int i, int j){
+        if(s.charAt(i) != s.charAt(j)) return "";
+        while(i>=0 && j<s.length()){
+            if(s.charAt(i) != s.charAt(j)){
+                break;
+            }
+            i--;
+            j++;
+        }
+        return s.substring(i+1, j);
+    }
+    
     public static void main(String[] args) {
         Solution s = new Solution();
-        System.out.println(s.longestPalindrome("babad"));
+        System.out.println(s.longestPalindrome("ccd"));
     }
 }
 // @lc code=end
