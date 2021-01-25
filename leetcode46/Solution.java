@@ -36,27 +36,25 @@ import java.util.*;
 
 // @lc code=start
 class Solution {
-    Map<Integer, Boolean> map = new HashMap<>();
-    List<List<Integer>> result = new LinkedList<>();
+    private ArrayList<Integer> route;
     public List<List<Integer>> permute(int[] nums) {
-        help(nums, new LinkedList<>());
-        return result;
+        route = new ArrayList<>(nums.length);
+        List<List<Integer>> results = new LinkedList<>();
+        backtrack(nums, results);
+        return results;
     }
 
-    private void help(int[] nums, LinkedList<Integer> tmp) {
-        if(tmp.size() == nums.length) {
-            result.add(new LinkedList<>(tmp));
-            tmp.removeLast();
+    public void backtrack(int[] nums, List<List<Integer>> results){
+        if(route.size() == nums.length){
+            results.add(new LinkedList<>(route));
             return;
         }
 
-        for (int i = 0; i < nums.length; i++) {
-            if(map.containsKey(nums[i])) continue;
-            tmp.add(nums[i]);
-            map.put(nums[i], true);
-            help(nums, tmp);
-            tmp.remove(new Integer(nums[i]));
-            map.remove(nums[i]);
+        for(int i=0; i<nums.length; i++){
+            if(route.contains(nums[i])) continue;
+            route.add(nums[i]);
+            backtrack(nums, results);
+            route.remove(route.size()-1);
         }
     }
 
