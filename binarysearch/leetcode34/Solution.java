@@ -1,4 +1,4 @@
-package leetcode.leetcode34;
+package leetcode.binarysearch.leetcode34;
 
 import java.util.Arrays;
 
@@ -35,54 +35,52 @@ import java.util.Arrays;
  * 
  */
 
+// @lc code=start
 public class Solution {
     public int[] searchRange(int[] nums, int target) {
+        if(nums.length == 0) return new int[]{-1,-1};
         int first = searchFirst(nums, target);
+        // 左边界没有搜索到，说明数组中没有这个元素，可以直接返回，不用搜索右边界了
+        if(first == -1) return new int[]{-1,-1};
         int last = searchLast(nums, target);
         return new int[]{first, last};
     }
 
     public int searchFirst(int[] nums, int target){
-        int low = 0;
-        int high = nums.length - 1;
-        while(low <= high){
-            int mid = (low + high) / 2;
+        int left = 0;
+        int right = nums.length-1;
 
-            if(nums[mid] >= target){
-                if (nums[mid] == target){
-                    if(mid == 0){
-                        return mid;
-                    } else if(mid - 1 >= 0 && nums[mid-1] < target){
-                        return mid;
-                    }
-                }
-                high = mid - 1;
+        while(left<=right){
+            int mid = left+(right-left)/2;
+            if(nums[mid]<target){
+                left=mid+1;
+            } else if (nums[mid]>target){
+                right = mid-1;
             } else {
-                low = mid + 1;
+                right=mid-1; //向左收缩
             }
         }
-        return -1;
+        if(left>=nums.length || nums[left] != target) return -1;
+        // 收缩右边界，可以返回right+1， for循环终结的区间是[right+1, right], left=right+1
+        return left;
     }
 
     public int searchLast(int[] nums, int target){
-        int low = 0;
-        int high = nums.length - 1;
-        while(low <= high){
-            int mid = (low + high) / 2;
-            if(nums[mid] <= target){
-                if(nums[mid] == target){
-                    if(mid == nums.length - 1){
-                        return mid;
-                    } else if(mid+1 <= nums.length-1 && nums[mid+1] > target){
-                        return mid;
-                    }
-                }
-                low = mid + 1;
+        int left = 0;
+        int right = nums.length-1;
+
+        while(left<=right){
+            int mid = left+(right-left)/2;
+            if(nums[mid]<target){
+                left=mid+1;
+            } else if (nums[mid]>target){
+                right = mid-1;
             } else {
-                high = mid - 1;
+                left = mid+1; //向右收缩
             }
         }
-        return -1;
+        if(right<0 || nums[right] != target) return -1;
+        return right;
     }
 
     public static void main(String[] args) {
@@ -95,7 +93,8 @@ public class Solution {
         int[] cc1 = s.searchRange(new int[]{5,7,7,8,8,10}, 8);
         System.out.println(Arrays.toString(cc1));
 
-        int[] cc2 = s.searchRange(new int[]{6}, 6);
+        int[] cc2 = s.searchRange(new int[]{2,2}, 3);
         System.out.println(Arrays.toString(cc2));
     }
 }
+// @lc code=end
