@@ -1,6 +1,6 @@
-package leetcode.leetcode25;
+package leetcode.linkedlist.leetcode25;
 
-import leetcode.common.*;
+import leetcode.common.ListNode;
 
 /*
  * @lc app=leetcode.cn id=25 lang=java
@@ -53,6 +53,7 @@ import leetcode.common.*;
 class Solution {
     public ListNode reverseKGroup(ListNode head, int k) {
         ListNode dummy = new ListNode(-1);
+        // 如果链表长度不够k个，这个不写会丢失链表信息
         dummy.next = head;
 
         ListNode prev = dummy;
@@ -63,11 +64,13 @@ class Solution {
             for (int i = 1; i < k && groupEnd != null; i++) {
                 groupEnd = groupEnd.next;
             }
+
+            // 剩余不足k个的节点，不需要翻转
             if (groupEnd == null)
                 break;
+
             ListNode nextGroupStart = groupEnd.next;
             groupEnd.next = null;
-
             prev.next = reverse(groupStart);
 
             // 将当前组和下一组连接，防止下一组数量不够无法翻转而丢失
