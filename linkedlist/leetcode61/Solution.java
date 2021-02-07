@@ -1,4 +1,5 @@
-package leetcode.leetcode61;
+package leetcode.linkedlist.leetcode61;
+
 /*
  * @lc app=leetcode.cn id=61 lang=java
  *

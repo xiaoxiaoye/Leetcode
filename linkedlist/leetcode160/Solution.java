@@ -1,9 +1,9 @@
-package leetcode.leetcode160;
+package leetcode.linkedlist.leetcode160;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import leetcode.common.*;
+import leetcode.common.ListNode;
 
 /*
  * @lc app=leetcode.cn id=160 lang=java

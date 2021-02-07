@@ -1,4 +1,4 @@
-package leetcode.leetcode109;
+package leetcode.linkedlist.leetcode109;
 
 
 /*

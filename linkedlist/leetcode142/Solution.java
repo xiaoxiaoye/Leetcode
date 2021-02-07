@@ -1,7 +1,6 @@
-package leetcode.leetcode142;
+package leetcode.linkedlist.leetcode142;
 
-import leetcode.common.*;
-import java.util.*;
+import leetcode.common.ListNode;
 
 /*
  * @lc app=leetcode.cn id=142 lang=java
@@ -73,23 +72,6 @@ import java.util.*;
  * }
  */
 public class Solution {
-    // public ListNode detectCycle(ListNode head) {
-    //     if (head == null || head.next == null) {
-    //         return null;
-    //     }
-    //     Set<ListNode> checkSet = new HashSet<>();
-    //     while(head != null) {
-    //         if(checkSet.contains(head)){
-    //             return head;
-    //         }
-    //         checkSet.add(head);
-
-    //         head = head.next;
-    //     }
-
-    //     return null;
-    // }
-
     public ListNode detectCycle(ListNode head) {
         ListNode slow = head;
         ListNode fast = head;

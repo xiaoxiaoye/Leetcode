@@ -1,6 +1,5 @@
-package leetcode.leetcode234;
+package leetcode.linkedlist.leetcode234;
 
-import leetcode.common.*;
 /*
  * @lc app=leetcode.cn id=234 lang=java
  *
@@ -33,6 +32,7 @@ import leetcode.common.*;
  * 你能否用 O(n) 时间复杂度和 O(1) 空间复杂度解决此题？
  * 
  */
+import leetcode.common.ListNode;
 
 // @lc code=start
 /**

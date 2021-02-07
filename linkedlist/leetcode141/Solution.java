@@ -1,6 +1,6 @@
-package leetcode.leetcode141;
+package leetcode.linkedlist.leetcode141;
 
-import leetcode.common.*;
+import leetcode.common.ListNode;
 
 /*
  * @lc app=leetcode.cn id=141 lang=java

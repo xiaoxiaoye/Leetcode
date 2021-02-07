@@ -1,4 +1,4 @@
-package leetcode.leetcode83;
+package leetcode.linkedlist.leetcode83;
 
 /*
  * @lc app=leetcode.cn id=83 lang=java

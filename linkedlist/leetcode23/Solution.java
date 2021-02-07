@@ -1,4 +1,4 @@
-package leetcode.leetcode23;
+package leetcode.linkedlist.leetcode23;
 
 
 class ListNode {
