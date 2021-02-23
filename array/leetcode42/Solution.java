@@ -1,6 +1,5 @@
-package leetcode.leetcode42;
+package leetcode.array.leetcode42;
 
-import java.util.*;
 /*
  * @lc app=leetcode.cn id=42 lang=java
  *
@@ -29,6 +28,7 @@ import java.util.*;
  * 输出: 6
  * 
  */
+import java.util.Stack;
 
 
 // @lc code=start

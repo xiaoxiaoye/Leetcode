@@ -1,6 +1,5 @@
-package leetcode.leetcode22;
+package leetcode.backtracking.leetcode22;
 
-import java.util.*;
 /*
  * @lc app=leetcode.cn id=22 lang=java
  *
@@ -33,6 +32,8 @@ import java.util.*;
  * 
  * 
  */
+import java.util.LinkedList;
+import java.util.List;
 
 // @lc code=start
 class Solution {
