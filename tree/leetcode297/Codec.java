@@ -1,7 +1,9 @@
 package leetcode.tree.leetcode297;
 
-import leetcode.common.*;
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedList;
+
+import leetcode.common.TreeNode;
 
 /*
  * @lc app=leetcode.cn id=297 lang=java
@@ -54,41 +56,27 @@ import java.util.*;
  * }
  */
 public class Codec {
-    public void rserialize(TreeNode root, StringBuilder builder) {
-        if (root == null) {
-            builder.append("None,");
-        } else {
-            builder.append(String.valueOf(root.val));
-            builder.append(",");
-            rserialize(root.left, builder);
-            rserialize(root.right, builder);
-        }
+    String serialize(TreeNode root) {
+        if (root == null) return "X";
+        return String.valueOf(root.val) + "," + serialize(root.left) + "," + serialize(root.right);
     }
-  
-    public String serialize(TreeNode root) {
-        StringBuilder builder = new StringBuilder();
-        rserialize(root, builder);
-        return builder.toString();
+
+    TreeNode deserialize(String str) {
+        LinkedList<String> list = new LinkedList<>();
+        Collections.addAll(list, str.split(","));
+        return deserializeHelper(list);
     }
-  
-    public TreeNode rdeserialize(List<String> l) {
-        if (l.get(0).equals("None")) {
-            l.remove(0);
+
+    TreeNode deserializeHelper(LinkedList<String> list) {
+        if (list.isEmpty()) return null;
+        String val = list.removeFirst();
+        if (val.equals("X")) {
             return null;
         }
-  
-        TreeNode root = new TreeNode(Integer.valueOf(l.get(0)));
-        l.remove(0);
-        root.left = rdeserialize(l);
-        root.right = rdeserialize(l);
-    
+        TreeNode root = new TreeNode(Integer.valueOf(val));
+        root.left = deserializeHelper(list);
+        root.right = deserializeHelper(list);
         return root;
-    }
-  
-    public TreeNode deserialize(String data) {
-        String[] dataArray = data.split(",");
-        List<String> dataList = new LinkedList<>(Arrays.asList(dataArray));
-        return rdeserialize(dataList);
     }
 }
 

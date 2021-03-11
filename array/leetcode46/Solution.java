@@ -1,6 +1,8 @@
-package leetcode.leetcode46;
+package leetcode.array.leetcode46;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /*
  * @lc app=leetcode.cn id=46 lang=java

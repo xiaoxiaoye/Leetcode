@@ -1,4 +1,4 @@
-package leetcode.leetcode47;
+package leetcode.array.leetcode47;
 
 /*
  * @lc app=leetcode.cn id=47 lang=java
@@ -28,8 +28,12 @@ package leetcode.leetcode47;
  * ]
  * 
  */
-
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
 
 // @lc code=start
 class Solution {
@@ -48,24 +52,6 @@ class Solution {
         dfs(nums, nums.length, 0, used, path, result);
         return result;
     }
-
-    // private void help(int[] nums, LinkedList<Integer> tmp) {
-    //     if(tmp.size() == nums.length) {
-    //         result.add(new LinkedList<>(tmp));
-    //         tmp.remove(new Integer(nums[nums.length-1]));
-    //         return;
-    //     }
-
-    //     for (int i = 0; i < nums.length; i++) {
-    //         if(map.containsKey(i)) continue;
-    //         if(i > 0 && nums[i] == nums[i-1]) continue;
-    //         tmp.add(nums[i]);
-    //         map.put(i, true);
-    //         help(nums, tmp);
-    //         tmp.remove(new Integer(nums[i]));
-    //         map.remove(i);
-    //     }
-    // }
 
     private void dfs(int[] nums, int len, int depth, boolean[] used, Deque<Integer> path, List<List<Integer>> res) {
         if(len == depth) {
