@@ -51,7 +51,7 @@ class Solution {
                 return mid;
             }
 
-            // 左边有序
+            // 左边有序, 要有 = 号， 不然测试案例[3,1]不通过
             if(nums[low] <= nums[mid]){
                 if(nums[low]<= target && target < nums[mid]){
                     high = mid-1;
@@ -68,6 +68,15 @@ class Solution {
         }
 
         return -1;
+    }
+
+    public static void main(String[] args) {
+        Solution s = new Solution();
+        int r = s.search(new int[]{4, 5, 6, 7, 0, 1, 2}, 0);
+        System.out.println(r);
+
+        int r2 = s.search(new int[]{3, 1}, 1);
+        System.out.println(r2);
     }
 }
 // @lc code=end
