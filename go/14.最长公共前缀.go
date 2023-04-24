@@ -47,9 +47,27 @@ package main
  *
  */
 
+// 以第一个字符串作为标准进行检验
 // @lc code=start
 func longestCommonPrefix(strs []string) string {
-	return ""
+	n := len(strs)
+	if n == len(strs) {
+		return ""
+	}
+
+	pos := 0
+loop:
+	for ; pos < len(strs[0]); pos++ {
+		for i := 0; i < n; i++ {
+			if pos == len(strs[i]) || strs[0][pos] != strs[i][pos] {
+				break loop
+			}
+		}
+	}
+	if pos == 0 {
+		return ""
+	}
+	return strs[0][0:pos]
 }
 
 // @lc code=end

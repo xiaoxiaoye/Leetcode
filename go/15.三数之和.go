@@ -68,7 +68,66 @@ package main
 
 // @lc code=start
 func threeSum(nums []int) [][]int {
-	return nil
+	result := make([][]int, 0)
+	n := len(nums)
+	QuickSot(nums, 0, n-1)
+	// sort.Ints(nums)
+	for i := 0; i < n; i++ {
+		if i != 0 && nums[i] == nums[i-1] {
+			continue
+		}
+
+		l := i + 1
+		r := n - 1
+		for l < r {
+			sum := nums[i] + nums[l] + nums[r]
+			if sum == 0 {
+				result = append(result, []int{nums[i], nums[l], nums[r]})
+				for l < r && nums[l+1] == nums[l] {
+					l++
+				}
+				for l < r && nums[r-1] == nums[r] {
+					r--
+				}
+				l++
+				r--
+			} else if sum < 0 {
+				l++
+				// for l < r && l != i+1 && nums[l] == nums[l-1] {
+				// 	l++
+				// }
+			} else {
+				r--
+				// for l < r && r != n-1 && nums[r] == nums[r+1] {
+				// 	r--
+				// }
+			}
+		}
+	}
+	return result
+}
+
+func QuickSot(nums []int, l, r int) {
+	if l >= r {
+		return
+	}
+
+	p := partition(nums, l, r)
+	QuickSot(nums, l, p-1)
+	QuickSot(nums, p+1, r)
+}
+
+func partition(nums []int, l, r int) int {
+	pivot := nums[r]
+	i := l
+	for j := l; j < r; j++ {
+		if nums[j] <= pivot {
+			nums[i], nums[j] = nums[j], nums[i]
+			i++
+		}
+	}
+	nums[i], nums[r] = nums[r], nums[i]
+	return i
 }
 
 // @lc code=end

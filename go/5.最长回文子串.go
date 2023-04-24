@@ -1,7 +1,5 @@
 package main
 
-import "fmt"
-
 /*
  * @lc app=leetcode.cn id=5 lang=golang
  *
@@ -48,6 +46,10 @@ import "fmt"
  *
  *
  */
+
+/*
+f(i,j) = f(i+1,j-1) && s[i+1] == s[j-1]
+*/
 
 func longestPalindrome_(s string) string {
 	n := len(s)
@@ -128,6 +130,6 @@ func expandAroundCenter(s string, l, r int) int {
 
 // @lc code=end
 
-func main() {
-	fmt.Println(longestPalindrome_("bb"))
-}
+// func main() {
+// 	fmt.Println(longestPalindrome_("bb"))
+// }

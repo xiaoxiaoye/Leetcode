@@ -1,5 +1,9 @@
 package main
 
+import (
+	"math"
+)
+
 /*
  * @lc app=leetcode.cn id=7 lang=golang
  *
@@ -62,7 +66,36 @@ package main
 
 // @lc code=start
 func reverse(x int) int {
-	return 0
+	isNegtive := x < 0
+	revNum := 0
+	for x != 0 {
+		b := x % 10
+		x = x / 10
+		if isNegtive {
+			if revNum < math.MinInt32/10 {
+				return 0
+			}
+			if revNum == math.MinInt32/10 && b < math.MinInt32%10 {
+				return 0
+			}
+		} else {
+			if revNum > math.MaxInt32/10 {
+				return 0
+			}
+			if revNum == math.MaxInt32 && b > math.MaxInt32%10 {
+				return 0
+			}
+		}
+		revNum = revNum*10 + b
+	}
+	return revNum
 }
 
 // @lc code=end
+
+// func main() {
+// 	fmt.Println(math.MaxInt32)
+// 	fmt.Println(math.MinInt32 / 10)
+// 	fmt.Println(math.MinInt32 % 10)
+// 	fmt.Print(reverse(-1463847412))
+// }

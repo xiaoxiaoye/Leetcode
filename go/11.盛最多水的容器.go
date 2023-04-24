@@ -55,7 +55,29 @@ package main
 
 // @lc code=start
 func maxArea(height []int) int {
-	return 0
+	l, r := 0, len(height)-1
+
+	maxV := 0
+	for l < r {
+		area := (r - l) * min(height[l], height[r])
+		if area > maxV {
+			maxV = area
+		}
+
+		if height[l] <= height[r] {
+			l++
+		} else {
+			r--
+		}
+	}
+	return maxV
+}
+
+func min(a, b int) int {
+	if a >= b {
+		return b
+	}
+	return a
 }
 
 // @lc code=end

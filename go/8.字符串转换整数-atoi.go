@@ -1,5 +1,7 @@
 package main
 
+import "math"
+
 /*
  * @lc app=leetcode.cn id=8 lang=golang
  *
@@ -99,7 +101,54 @@ package main
 
 // @lc code=start
 func myAtoi(s string) int {
-	return 0
+	n := len(s)
+
+	res := int64(0)
+	flag := 1
+	isBegin := false
+	for i := 0; i < n; i++ {
+		if s[i] == ' ' && !isBegin {
+			continue
+		}
+
+		if !isDigit(s[i]) && !isBegin {
+			break
+		}
+
+		if (s[i] == '-' || s[i] == '+') && !isBegin && i+1 < n && isDigit(s[i+1]) {
+			if s[i] == '-' {
+				flag = -1
+			}
+			isBegin = true
+			continue
+		}
+
+		if isBegin && !isDigit(s[i]) {
+			break
+		}
+
+		if isDigit(s[i]) {
+			isBegin = true
+			res = res*10 + int64(s[i]-'0')
+			if res*int64(flag) >= math.MaxInt32 {
+				return math.MaxInt32
+			}
+			if res*int64(flag) <= math.MinInt32 {
+				return math.MinInt32
+			}
+		}
+
+	}
+	return int(res) * flag
+}
+
+func isDigit(s byte) bool {
+	return s >= '0' && s <= '9'
 }
 
 // @lc code=end
+
+// func main() {
+// 	// println(myAtoi("4193 with words"))
+// 	println(myAtoi("00000-42a1234"))
+// }
