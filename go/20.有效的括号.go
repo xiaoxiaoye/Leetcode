@@ -1,7 +1,5 @@
 package main
 
-import "fmt"
-
 /*
  * @lc app=leetcode.cn id=20 lang=golang
  *
@@ -103,7 +101,7 @@ func isValid(s string) bool {
 
 // @lc code=end
 
-func main() {
-	s := "()"
-	fmt.Printf("%v", isValid(s))
-}
+// func main() {
+// 	s := "()"
+// 	fmt.Printf("%v", isValid(s))
+// }
